@@ -1,0 +1,25 @@
+# ローカル開発用
+version: "3"
+services:
+  python:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+    # コンテナ立ち上げ時に実行されるコマンド
+    # pipenvによるパッケージインストール（コンテナ内では仮想環境化せず、グローバルインストールさせる）
+    command: >
+      bash -c "pipenv install --dev --system && sleep infinity"
+    # コンテナ内のカレントディレクトリ指定
+    working_dir: /app
+    # 固定の環境変数
+    environment:
+      # cacheファイルを生成させない
+      - PYTHONDONTWRITEBYTECODE=1
+    # 環境変数として扱うファイルの指定
+    env_file:
+      - .env
+    # 常時起動のために必要
+    tty: true
+    stdin_open: true
